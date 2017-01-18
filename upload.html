@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>uploading files</title>
+	<script src="http:\\ajax.googleapis.com\ajax\libs\ajax.angular\1.4.8\angular.min.js"></script>
+</head>
+<body>
+<div ng-app="myapp" ng-controller="myctrl">
+	<input type="file" file-model="myfile" />
+	<button ng-click="uploadFile()">uploadme</button>
+</div>
+<script>
+	var myapp=angular.module('myapp',[]);
+	myapp.directive('fileModel',['$parse',function($parse) {
+		return{
+			restrict:'A',
+			link:function(scope,element,attrs) {
+				var model=
+				$sparse(attrs.fileModel);
+				var modelsetter=model.assign;
+				element.bind('change',function(){
+					scope.$apply(function(){
+						modelsetter(scope,element[0].files[0]);
+					});
+				});
+			}		
+	};
+}]);
+	myapp.service('fileupod',['$http',function($http){
+		this.uploadFileTourl=function(file,uploadurl){
+			var fd = new FormData();
+			fd.apped('file',file);
+			$http.post(uploadurl,fd,{ transformrequest:angular.identity,headers:{'content-type':undefined}
+		}) .success(function(){
+
+		})
+		.error(function(){
+
+		});
+		}
+	}]);
+	myapp.controller('myctrl',['$scope','fileupload',function($sope,fileupload){
+		$scope.uploadFile=function(){
+			var file =$scope.myfile;console.log('file is');
+			console.dir(file);
+			var uploadurl="/fileupload";
+			fileupload.uploadFiletourl(fie,uploadurl);
+		};
+		}]);
+	
+</script>
+</body>
+</html>
